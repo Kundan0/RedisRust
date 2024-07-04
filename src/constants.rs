@@ -1,1 +1,1 @@
-pub const CLRF: &str = "\r\n";
+pub const CRLF: &str = "\r\n";
