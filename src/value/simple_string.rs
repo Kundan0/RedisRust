@@ -46,8 +46,6 @@ impl Deserialize for SimpleString {
                     }
                     i += 1;
                 }
-                // Currently the Bulk String holds String instead of Vec<u8>. Bulkstring is
-                // serialized to String. This needs to be changed.
                 let value = SimpleString(std::str::from_utf8(&string).unwrap().to_owned());
                 // Start index is always 0
                 //    i i+1

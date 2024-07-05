@@ -37,23 +37,15 @@ impl Deserialize for Array {
         match bytes.get(0) {
             Some(b'*') => {
                 let first_crlf_index = read_until_crlf(&bytes[..], 1)?;
-                dbg!(first_crlf_index);
                 let count_int = std::str::from_utf8(&bytes[1..first_crlf_index])?
                     .to_owned()
                     .parse::<usize>()?;
-                dbg!(count_int);
                 let mut value_vec: Vec<Value> = Vec::new();
                 let mut upto_index = first_crlf_index + 1;
                 for _i in 0..count_int {
-                    dbg!(_i);
-                    if _i == 0 {
-                        dbg!(std::str::from_utf8(&bytes[upto_index + 1..]).unwrap());
-                    }
                     let value_with_index = Value::deserialize(&bytes[upto_index + 1..])?;
-                    dbg!(&value_with_index.value);
                     value_vec.push(value_with_index.value);
                     upto_index = upto_index + (value_with_index.index.1 + 1);
-                    dbg!(upto_index);
                 }
                 Result::Ok(ArrayWithIndex {
                     value: Array(value_vec),
@@ -64,7 +56,6 @@ impl Deserialize for Array {
         }
     }
 }
-
 #[cfg(test)]
 mod tests {
     use super::*;

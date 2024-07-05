@@ -39,6 +39,9 @@ pub enum RedisError {
 
     #[error("CRLF not found")]
     CRLFNotFoundError,
+
+    #[error("Unknown command")]
+    UnknownCommand,
 }
 
 pub type Result<T> = std::result::Result<T, RedisError>;

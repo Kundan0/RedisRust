@@ -96,7 +96,6 @@ mod tests {
             if should_succeed {
                 assert_eq!(result.unwrap().value, expected);
             } else {
-                dbg!(std::str::from_utf8(input.as_slice()).unwrap());
                 assert!(result.is_err());
             }
         }

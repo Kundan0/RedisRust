@@ -1,10 +1,10 @@
-mod array;
+pub mod array;
 mod boolean;
-mod bulk_string;
-mod deserialize;
+pub mod bulk_string;
+pub mod deserialize;
 mod integer;
-mod serialize;
-mod simple_error;
+pub mod serialize;
+pub mod simple_error;
 mod simple_string;
 use array::Array;
 use boolean::Boolean;
@@ -33,8 +33,8 @@ pub enum Value {
 }
 
 pub struct ValueWithIndex {
-    value: Value,
-    index: (usize, usize),
+    pub value: Value,
+    pub index: (usize, usize),
 }
 impl ValueWithIndex {
     pub fn index(self) -> (usize, usize) {

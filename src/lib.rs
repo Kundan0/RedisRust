@@ -1,10 +1,19 @@
-use tokio::io::{AsyncReadExt, AsyncWriteExt};
-use tokio::net::TcpStream;
+pub mod command;
 pub mod constants;
 mod error;
-use crate::constants::CRLF;
-mod value;
+pub mod value;
+use core::panic;
+
+use crate::command::Execute;
 use crate::error::{RedisError, Result};
+use crate::value::serialize::{self, Serialize};
+use command::Command;
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
+use tokio::net::TcpStream;
+use value::array::Array;
+use value::bulk_string::BulkString;
+use value::deserialize::Deserialize;
+use value::Value;
 fn read_until_crlf(item: &[u8], count: usize) -> Result<usize> {
     let mut local_count = 0;
     for index in 0..item.len() {
@@ -32,6 +41,22 @@ fn check_crlf(value: &[u8], index: usize) -> Result<bool> {
     }
 }
 
+fn execute(request: Array) -> String {
+    let mut command: Option<Command> = None;
+    let mut options: Vec<BulkString> = vec![];
+    for (i, value) in request.0.iter().enumerate() {
+        if let Value::BulkString(x) = value.clone() {
+            if i == 0 {
+                command = Some(Command::try_from(x).unwrap());
+            } else {
+                options.push(x.clone());
+            }
+        }
+    }
+    let response = command.unwrap().execute(options);
+    response.serialize()
+}
+
 pub async fn handle_connection(mut stream: TcpStream) {
     println!("Handling new connection");
     loop {
@@ -40,7 +65,16 @@ pub async fn handle_connection(mut stream: TcpStream) {
         if bytes_read == 0 {
             break;
         }
-        println!("Got: {:?}\n\nTotal bytes: {bytes_read}", buf);
-        let _ = stream.write_all(format!("+PONG{}", CRLF).as_bytes()).await;
+        let value = Value::deserialize(&buf[..]);
+        match value {
+            Err(e) => {
+                dbg!(e);
+            }
+            Ok(val) => {
+                if let Value::Array(arr) = val.value {
+                    let _ = stream.write_all(execute(arr).as_bytes()).await;
+                }
+            }
+        }
     }
 }
