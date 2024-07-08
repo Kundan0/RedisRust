@@ -1,3 +1,3 @@
 pub trait Serialize {
-    fn serialize(self) -> String;
+    fn serialize(&self) -> String;
 }

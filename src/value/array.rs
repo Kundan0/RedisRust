@@ -8,9 +8,9 @@ use crate::value::Value;
 pub struct Array(pub Vec<Value>);
 
 impl Serialize for Array {
-    fn serialize(self) -> String {
+    fn serialize(&self) -> String {
         let mut serialized_array = format!("*{}{CRLF}", self.0.len());
-        for value in self.0 {
+        for value in &self.0 {
             serialized_array = format!("{serialized_array}{}", value.serialize())
         }
         serialized_array

@@ -7,7 +7,7 @@ use crate::error::*;
 pub struct Boolean(pub bool);
 
 impl Serialize for Boolean {
-    fn serialize(self) -> String {
+    fn serialize(&self) -> String {
         if self.0 {
             format!("#t{CRLF}")
         } else {

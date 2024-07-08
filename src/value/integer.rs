@@ -7,7 +7,7 @@ use crate::error::*;
 pub struct Integer(pub i64);
 
 impl Serialize for Integer {
-    fn serialize(self) -> String {
+    fn serialize(&self) -> String {
         format!(":{}{CRLF}", self.0)
     }
 }
@@ -66,7 +66,7 @@ mod tests {
     use crate::value::Value;
 
     fn serialize_and_assert(value: Value, expected: &str) {
-        assert_eq!(expected, Value::serialize(value));
+        assert_eq!(expected, Value::serialize(&value));
     }
 
     #[test]

@@ -7,7 +7,7 @@ use crate::value::deserialize::{Deserialize, WithIndex};
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BulkString(pub String);
 impl Serialize for BulkString {
-    fn serialize(self) -> String {
+    fn serialize(&self) -> String {
         format!("${}{CRLF}{}{CRLF}", self.0.len(), self.0)
     }
 }
@@ -72,7 +72,7 @@ mod tests {
     use crate::constants::CRLF;
     use crate::value::Value;
     fn serialize_and_assert(value: Value, expected: &str) {
-        assert_eq!(expected, Value::serialize(value));
+        assert_eq!(expected, Value::serialize(&value));
     }
 
     #[test]

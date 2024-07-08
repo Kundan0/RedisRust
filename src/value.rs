@@ -2,15 +2,17 @@ pub mod array;
 mod boolean;
 pub mod bulk_string;
 pub mod deserialize;
-mod integer;
+pub mod integer;
+pub mod nulls;
 pub mod serialize;
 pub mod simple_error;
-mod simple_string;
+pub mod simple_string;
 use array::Array;
 use boolean::Boolean;
 use bulk_string::BulkString;
 use deserialize::{Deserialize, WithIndex};
 use integer::Integer;
+use nulls::Nulls;
 use serialize::Serialize;
 use simple_error::SimpleError;
 use simple_string::SimpleString;
@@ -30,6 +32,7 @@ pub enum Value {
     BulkString(BulkString),
     Array(Array),
     Boolean(Boolean),
+    Nulls(Nulls),
 }
 
 pub struct ValueWithIndex {
@@ -95,7 +98,7 @@ impl WithIndex for ValueWithIndex {
     }
 }
 impl Serialize for Value {
-    fn serialize(self) -> String {
+    fn serialize(&self) -> String {
         match self {
             Value::SimpleString(simple_string) => simple_string.serialize(),
             Value::SimpleError(simple_error) => simple_error.serialize(),
@@ -103,6 +106,7 @@ impl Serialize for Value {
             Value::BulkString(bulk_string) => bulk_string.serialize(),
             Value::Array(array) => array.serialize(),
             Value::Boolean(boolean) => boolean.serialize(),
+            Value::Nulls(nulls) => nulls.serialize(),
         }
     }
 }

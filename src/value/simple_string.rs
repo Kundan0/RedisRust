@@ -8,7 +8,7 @@ use crate::error::*;
 pub struct SimpleString(pub String);
 
 impl Serialize for SimpleString {
-    fn serialize(self) -> String {
+    fn serialize(&self) -> String {
         format!("+{}{CRLF}", self.0)
     }
 }
@@ -67,7 +67,7 @@ mod tests {
     use crate::constants::CRLF;
     use crate::value::Value;
     fn serialize_and_assert(value: Value, expected: &str) {
-        assert_eq!(expected, Value::serialize(value));
+        assert_eq!(expected, Value::serialize(&value));
     }
 
     #[test]

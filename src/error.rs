@@ -31,6 +31,9 @@ pub enum RedisError {
     #[error("Boolean Parse Error: {0}")]
     BooleanParseError(ParseError),
 
+    #[error("Nulls Parse Error: {0}")]
+    NullsParseError(ParseError),
+
     #[error("Redis Value Parse Error: {0}")]
     ValueParseError(ParseError),
 
@@ -42,6 +45,12 @@ pub enum RedisError {
 
     #[error("Unknown command")]
     UnknownCommand,
+
+    #[error("Key does not exist")]
+    KeyDoesNotExist,
+
+    #[error("Key has been expired")]
+    ExpiredKey,
 }
 
 pub type Result<T> = std::result::Result<T, RedisError>;
